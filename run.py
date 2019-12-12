@@ -31,7 +31,7 @@ def submitText():
         	label 		        = "🔴 Texte non pertinent"
         	rounded_probability	= 0
         else:
-    	    y_new_obs_predicted, prediction_details = 	build_model.predict(X_new, categories_classification_model, categories) 
+    	    y_new_obs_predicted                     = 	build_model.predict(X_new, categories_classification_model, categories) 
     	    label 									= 	y_new_obs_predicted[0][0] 
     	    probability 							= 	y_new_obs_predicted[0][1]
     	    rounded_probability                     =  	np.round(float(probability),2)
