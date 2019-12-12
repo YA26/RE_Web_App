@@ -24,7 +24,6 @@ decorator==4.4.0
 defusedxml==0.6.0
 docutils==0.15.2
 entrypoints==0.3
-fr-core-news-sm==2.2.0
 gast==0.2.2
 gensim==3.7.3
 google-pasta==0.1.7
