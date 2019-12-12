@@ -166,7 +166,7 @@ class ModelBuilder:
                             score=self.cosine_similarity(word, tf_idf_scores)
                             sentence_score+=score
                         if score>0:
-                            sentences_shrunk.append("{}. ".format(self.shrink_sentence(word, sentence, 7)))
+                            sentences_shrunk.append("{}. ".format(self.shrink_sentence(word, sentence, 3)))
                 if sentence_score>0:
                     corpus_+=" ".join(list(dict.fromkeys(sentences_shrunk)))
             if len(corpus_.strip())>0:
@@ -198,7 +198,7 @@ class ModelBuilder:
                             score=self.cosine_similarity(word, tf_idf_scores)
                             sentence_score+=score
                         if score>0:
-                            sentences_shrunk.append("{}. ".format(self.shrink_sentence(word, sentence, 7)))          
+                            sentences_shrunk.append("{}. ".format(self.shrink_sentence(word, sentence, 3)))          
                 if sentence_score>0:
                     corpus_+=" ".join(list(dict.fromkeys(sentences_shrunk)))
             if len(corpus_.strip())>0:
