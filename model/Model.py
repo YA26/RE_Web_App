@@ -15,9 +15,9 @@ import pickle
 class ModelBuilder:
     
     def __init__(self, Word_2_Vec_path):
-        self.__toknizer = RegexpTokenizer(r'''\w'|\w+|[^\w\s]''')
-        self.__Word2_vec_model = KeyedVectors.load_word2vec_format(Word_2_Vec_path, binary=True)  
-        self.__one_hot_encoder = OneHotEncoder()
+        self.__toknizer         = RegexpTokenizer(r'''\w'|\w+|[^\w\s]''')
+        self.__Word2_vec_model  = KeyedVectors.load_word2vec_format(Word_2_Vec_path, binary=True)  
+        self.__one_hot_encoder  = OneHotEncoder()
               
     def get_word_2_vec_model(self):
         return self.__Word2_vec_model

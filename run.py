@@ -28,7 +28,7 @@ def submitText():
     if len(sentence.strip())!=0:
         X_new = build_model.get_only_meaningful_sentences_without_label(tf_idf_dict, [sentence])
         if len(X_new)==0:
-        	label 		= "🔴 Texte non pertinent"
+        	label 		        = "🔴 Texte non pertinent"
         	rounded_probability	= 0
         else:
     	    y_new_obs_predicted, prediction_details = 	build_model.predict(X_new, categories_classification_model, categories) 
