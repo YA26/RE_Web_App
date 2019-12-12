@@ -6,7 +6,7 @@ import numpy as np
 app=Flask(__name__)
 
 #MAIN OBJECT: object that contains "predict()" method and other useful methods
-build_model         =   ModelBuilder(word2vec_path="./model/Word2Vec/frWac_non_lem_no_postag_no_phrase_500_skip_cut200.bin") 
+build_model         =   ModelBuilder(Word_2_Vec_path="./model/Word2Vec/frWac_non_lem_no_postag_no_phrase_500_skip_cut200.bin") 
 
 #LOADING THE MODEL
 categories_classification_model = load_model("./model/ML_models/rental_incidents_classification_model.h5")
