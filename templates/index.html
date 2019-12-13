@@ -48,11 +48,13 @@
 					<textarea class="input100" name="message" placeholder="Entrez du texte..." id="message" required></textarea>
 					<span class="focus-input100"></span>
 				</div>
-
 				<div class="container-contact100-form-btn">
-					<button class="contact100-form-btn">
-						Valider
+					<button class="valid-btn btn btn-success btn-block pb-md-3 pt-md-3">
+						 Valider  ✅
 					</button>
+					<button class="record-btn btn btn-info btn-block pb-md-3 pt-md-3" type="button">
+						Commencer l'enregistrement 🎙️
+					</button>		
 				</div>
 			</form>
 		</div>
@@ -76,14 +78,62 @@
 	<script src="{{url_for('static', filename='js/map-custom.js')}}"></script>
 <!--===============================================================================================-->
 	<script src="{{url_for('static', filename='js/main.js')}}"></script>
+<!--===============================================================================================-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/p5.min.js"></script>
+<!--===============================================================================================-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/addons/p5.dom.js"></script>
+<!--===============================================================================================-->
+	<script src="{{url_for('static', filename='js/p5/lib/p5.speech.js')}}"></script>
+
 	<script>
 		window.dataLayer = window.dataLayer || [];
 	  	function gtag(){dataLayer.push(arguments);}
 	  	gtag('js', new Date());
 	  	gtag('config', 'UA-23581568-13');
 
+	  	//Speech recognition
+	  	var text_recorded="";
+	  	
+		function speechRecognition()
+	  	{
+	  		var lang=navigator.language || 'fr-FR';
+			var speechRec=new p5.SpeechRec(lang);
+		  	speechRec.onResult=gotSpeech;
+		  	speechRec.onStart=displayRecordInProgress;
+		  	speechRec.onEnd=displaySpeech;
+	  		speechRec.continuous=false;
+		  	speechRec.interimResults=true;
+				speechRec.start();
+
+			function displayRecordInProgress()
+			{
+				$('#result').val("🔴 En cours d'enregistrement");
+			}
+
+		 	function gotSpeech()
+		 	{	
+		 		if(speechRec.resultValue)
+		 		{	
+		 			text_recorded=speechRec.resultString+". ";
+	 			}
+		 	}
+
+		 	function displaySpeech()
+		 	{
+		 		$('#result').val("");	
+	 			$('#message').append(text_recorded);			
+		 	}
+	  	}
+			
+		$('.record-btn').click(function() {
+		            speechRecognition();
+		        });
+
+
+ 		//Ajax request to get label and probaility
+
 		$(function() {
-	        $('.contact100-form-btn').click(function() {              	
+	        $('.valid-btn').click(function() {              	
             	$('#main-form').submit();  		                  
 	        });
 
