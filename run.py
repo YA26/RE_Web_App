@@ -34,7 +34,7 @@ def submitText():
     	    y_new_obs_predicted = build_model.predict(X_new, categories_classification_model, categories) 
     	    label               = y_new_obs_predicted[0][0] 
     	    probability         = y_new_obs_predicted[0][1]
-    	    rounded_probability = np.round(float(probability),2)
+    	    rounded_probability = np.round(float(probability),3)
         return jsonify({'status':'OK', 'label':label, 'probability':rounded_probability})
     return jsonify({'status':'OK', 'warning':" ⚠️ Vous n'avez rien entré"})
 
