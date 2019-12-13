@@ -101,9 +101,9 @@
 		  	speechRec.onResult=gotSpeech;
 		  	speechRec.onStart=displayRecordInProgress;
 		  	speechRec.onEnd=displaySpeech;
-	  		speechRec.continuous=false;
-		  	speechRec.interimResults=true;
-				speechRec.start();
+	  		//speechRec.continuous=false;
+		  	// speechRec.interimResults=true;
+			speechRec.start();
 
 			function displayRecordInProgress()
 			{
@@ -114,14 +114,14 @@
 		 	{	
 		 		if(speechRec.resultValue)
 		 		{	
-		 			text_recorded=speechRec.resultString+". ";
+		 			text_recorded=speechRec.resultString+". "; 				
 	 			}
 		 	}
 
 		 	function displaySpeech()
 		 	{
 		 		$('#result').val("");	
-	 			$('#message').append(text_recorded);			
+	 			$('#message').val($('#message').val()+" "+text_recorded);	
 		 	}
 	  	}
 			
