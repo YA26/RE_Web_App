@@ -100,7 +100,7 @@
 			var speechRec=new p5.SpeechRec(lang);
 		  	speechRec.onResult=gotSpeech;
 		  	speechRec.onStart=displayRecordInProgress;
-		  	speechRec.onEnd=displaySpeech;
+		  	speechRec.onEnd=RemoveRecordInProgress;
 	  		//speechRec.continuous=false;
 		  	// speechRec.interimResults=true;
 			speechRec.start();
@@ -114,14 +114,14 @@
 		 	{	
 		 		if(speechRec.resultValue)
 		 		{	
-		 			text_recorded=speechRec.resultString+". "; 				
+		 			text_recorded=speechRec.resultString+". "; 	
+		 			$('#message').val($('#message').val()+" "+text_recorded);			
 	 			}
 		 	}
 
-		 	function displaySpeech()
+		 	function RemoveRecordInProgress()
 		 	{
-		 		$('#result').val("");	
-	 			$('#message').val($('#message').val()+" "+text_recorded);	
+		 		$('#result').val("");		
 		 	}
 	  	}
 			
