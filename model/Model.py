@@ -235,7 +235,6 @@ class ModelBuilder:
                 df_corpus_prediction=pd.DataFrame(prediction_corpus_vector*100, index=categories, columns=["Predictions"])        
                 df_sentences_prediction/=number_of_sentences
                 df_final_prediction=(df_corpus_prediction+df_sentences_prediction)/2
-                print(df_final_prediction)
                 max_predictions.append([df_final_prediction.idxmax()[0], df_final_prediction.max()[0]])
         return np.array(max_predictions)
     
