@@ -23,8 +23,8 @@ def index():
 def submitText():  
     #PREDICTION FOR A NEW OBSERVATION
     label               =  None
-    rounded_probability = None
-    sentence            = request.form["message"]
+    rounded_probability =  None
+    sentence            =  request.form["message"]
     if len(sentence.strip())!=0:
         X_new = build_model.get_only_meaningful_sentences_without_label(tf_idf_dict, [sentence])
         if len(X_new)==0:
