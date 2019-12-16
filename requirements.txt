@@ -1,5 +1,4 @@
 flask
-gunicorn==19.9.0
 absl-py==0.8.1
 alabaster==0.7.12
 asn1crypto==1.0.1
