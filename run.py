@@ -38,10 +38,11 @@ def submitText():
         return jsonify({'status':'OK', 'label':label, 'probability':rounded_probability})
     return jsonify({'status':'OK', 'warning':" ⚠️ Vous n'avez rien entré"})
 
+"""
 if __name__ == "__main__":
     app.run(debug=True)
     
-
+"""
 
 
 
