@@ -264,6 +264,7 @@ class ModelBuilder:
                 prediction_corpus_vector=stat_model.predict(corpus_vector.reshape(1,-1)).T 
                 df_corpus_prediction=pd.DataFrame(prediction_corpus_vector*100, index=categories, columns=["Predictions"])        
                 df_sentences_prediction/=number_of_sentences
+                print(df_corpus_prediction)
                 #We get the best of both worlds
                 df_final_prediction=(df_corpus_prediction+df_sentences_prediction)/2
                 max_predictions.append([df_final_prediction.idxmax()[0], df_final_prediction.max()[0]])
