@@ -26,7 +26,7 @@ def submitText():
     rounded_probability =  None
     sentence            =  request.form["message"]
     if len(sentence.strip())!=0:
-        X_new = build_model.get_meaningful_sentences_only_without_label(tf_idf_dict, [sentence], 5)
+        X_new = build_model.get_meaningful_sentences_only_without_label(tf_idf_dict, [sentence], 4)
         if len(X_new)==0:
         	label 		        = "❌ Texte non pertinent"
         	rounded_probability	= 0
@@ -41,8 +41,8 @@ def submitText():
 """
 if __name__ == "__main__":
     app.run(debug=True)
-    
 """
+
 
 
 
