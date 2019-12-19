@@ -22,28 +22,28 @@ def index():
 
 @app.route("/submit", methods=["POST"])
 def submitForm(): 
-    prediction_dict = incident_classifier.get_json(text=request.form["message"], 
-                                                    tf_idf_dict=tf_idf_dict,
-                                                    categories=categories, 
-                                                    deep_learning_model=categories_classification_model, 
-                                                    window_size=4) 
+    prediction_dict = incident_classifier.get_prediction_json(text=request.form["message"], 
+                                                                tf_idf_dict=tf_idf_dict,
+                                                                categories=categories, 
+                                                                deep_learning_model=categories_classification_model, 
+                                                                window_size=4) 
 
     return jsonify(prediction_dict)
     
 @app.route("/get-json/<text>", methods=["GET"])
 def submitText(text):  
-    prediction_dict = incident_classifier.get_json(text=text, 
-                                                    tf_idf_dict=tf_idf_dict,
-                                                    categories=categories,
-                                                    deep_learning_model=categories_classification_model, 
-                                                    window_size=4) 
+    prediction_dict = incident_classifier.get_prediction_json(text=text, 
+                                                                tf_idf_dict=tf_idf_dict,
+                                                                categories=categories,
+                                                                deep_learning_model=categories_classification_model, 
+                                                                window_size=4) 
     return jsonify(prediction_dict)
 
 """
 if __name__ == "__main__":
     app.run(debug=True)
-""" 
-
+    
+"""
 
 
 

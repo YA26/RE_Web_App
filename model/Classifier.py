@@ -203,7 +203,7 @@ class IncidentClassifier:
             loaded_variable=pickle.load(file)
         return loaded_variable
 
-    def get_json(self, text, tf_idf_dict, categories, deep_learning_model, window_size):
+    def get_prediction_json(self, text, tf_idf_dict, categories, deep_learning_model, window_size):
         '''
         Prediction for a new observation: we return a json object with the label and its probability(if they do exist)
         '''
