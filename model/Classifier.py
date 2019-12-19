@@ -1,32 +1,23 @@
-import pandas as pd
-import numpy as np
 from gensim.models import KeyedVectors
-from sklearn.utils import shuffle
-from tensorflow.keras import layers
-from tensorflow.keras.layers import Dropout
-import tensorflow as tf
 from collections import defaultdict
 from nltk import RegexpTokenizer
-from sklearn.preprocessing import OneHotEncoder
+import pandas as pd
+import numpy as np
 import operator
-import re
 import pickle
+import re
 
-class ModelBuilder:
+class IncidentClassifier:
     
     def __init__(self, Word_2_Vec_path):
         self.__toknizer         = RegexpTokenizer(r'''\w'|\w+|[^\w\s]''')
-        self.__Word2_vec_model  = KeyedVectors.load_word2vec_format(Word_2_Vec_path, binary=True)  
-        self.__one_hot_encoder  = OneHotEncoder()
+        self.__Word2_vec_model  = KeyedVectors.load_word2vec_format(Word_2_Vec_path, binary=True)
               
     def get_word_2_vec_model(self):
         return self.__Word2_vec_model
     
     def get_tokenizer(self):
         return self.__toknizer
-    
-    def get_one_hot_encoder(self):
-        return self.__one_hot_encoder
     
     def sent_tokenizer(self, string):
         '''
@@ -42,78 +33,6 @@ class ModelBuilder:
         '''
         return " ".join(re.findall("[\D.]+", " ".join(re.findall("[\w.]+", corpus))))
     
-    def sentence_to_vector(self, X_not_encoded):
-        '''
-        Function to implement sentence embedding 
-        '''
-        #We use Word2Vec embedding, if there is a vector for a given word, we use its vector, otherwise we discard it.
-        X_encoded=[] 
-        for sentence in X_not_encoded:
-            sent_vector=0
-            for word in self.__toknizer.tokenize(sentence.lower()):
-                try:
-                    sent_vector+=self.__Word2_vec_model.get_vector(word)
-                except KeyError:
-                    pass
-            X_encoded.append(sent_vector)
-        X_encoded=np.array(X_encoded)
-        return X_encoded
-                  
-    def build_training_set(self, contents_by_categories):
-        '''
-        Encoding, shuffling and gathering everything up 
-        '''
-        #Creating not_encoded X_train and y_train datasets from contents_by_categories
-        X_train_not_encoded=[]
-        y_train_not_encoded=[]
-        for index, corpora in contents_by_categories.items():
-            for corpus in corpora:
-                X_train_not_encoded.append(corpus[0])
-                y_train_not_encoded.append(index)
-        
-        X_train_not_encoded=np.array(X_train_not_encoded)
-        y_train_not_encoded=np.array(y_train_not_encoded)
-        
-        #Encoding our training_set contents and labels 
-        X_train_encoded=self.sentence_to_vector(X_train_not_encoded)
-        
-        #Encoding our training_set labels 
-        y_train_encoded=[] 
-        y_train_not_encoded=y_train_not_encoded.reshape((-1,1))
-        self.__one_hot_encoder.fit(y_train_not_encoded)
-        y_train_encoded = self.__one_hot_encoder.transform(y_train_not_encoded).toarray()
-        
-        #Shuffling training_set 
-        X_and_y=np.concatenate((X_train_encoded, y_train_encoded), axis=1)
-        X_and_y=shuffle(X_and_y)      
-        X_train_encoded=X_and_y[:,:X_train_encoded.shape[1]]
-        y_train_encoded=X_and_y[:,X_train_encoded.shape[1]:]
-        return X_train_encoded, y_train_encoded
-       
-    def neural_network(self, X, y, path, epoch, batch_size, lr):
-        '''
-        This functions implements a neural network with some dropout layers to avoid overfitting. 
-        Here we start with an input vector of 500 dimensions. Every dense layer maps the former input to a reduced output to allow
-        every single perceptron to have a better classification of all the inputs(sentences) in our dataset
-        '''
-        model = tf.keras.Sequential()
-        model.add(layers.Dense(units=X.shape[1] , input_dim=X.shape[1]))
-        model.add(Dropout(0.2))
-        model.add(layers.Dense(units=400, activation='relu'))
-        model.add(Dropout(0.2))
-        model.add(layers.Dense(units=200, activation='relu'))
-        model.add(Dropout(0.2))
-        model.add(layers.Dense(units=100, activation='relu'))
-        model.add(Dropout(0.2))
-        model.add(layers.Dense(units=50, activation='relu'))
-        model.add(Dropout(0.2))
-        model.add(layers.Dense(units=y.shape[1], activation='softmax'))
-        model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=[tf.keras.metrics.Precision()], lr=lr) 
-        model.fit(X, y, epochs=epoch, batch_size=batch_size)
-        model.save(path)
-        print("Saved model to "+str(path))
-        return model
-      
     def cosine_similarity(self, word, tf_idf_scores, confidence_threshold):
         '''
         This functions helps us determine how valuable a word is to our targets variables.
@@ -161,7 +80,6 @@ class ModelBuilder:
 
         3- We keep the remaining sentence
         '''
-
         X=[]
         y=[]
         iterator=1
@@ -284,6 +202,27 @@ class ModelBuilder:
         with open(path, "rb") as file:
             loaded_variable=pickle.load(file)
         return loaded_variable
+
+    def get_json(self, text, tf_idf_dict, categories, deep_learning_model, window_size):
+        '''
+        Prediction for a new observation: we return a json object with the label and its probability(if they do exist)
+        '''
+        label               =  None
+        rounded_probability =  None
+        sentence            =  text
+        if len(sentence.strip())!=0:
+            X_new = self.get_meaningful_sentences_only_without_label(tf_idf_dict, [sentence], window_size)
+            if len(X_new)==0:
+                label               = "❌ Texte non pertinent"
+                rounded_probability = 0
+            else:
+                y_new_obs_predicted = self.predict(X_new, deep_learning_model, categories) 
+                label               = y_new_obs_predicted[0][0] 
+                probability         = y_new_obs_predicted[0][1]
+                rounded_probability = np.round(float(probability), 3)
+            return {'status':'OK', 'label':label, 'probability':rounded_probability}
+        return {'status':'KO', 'warning':" ⚠️ Vous n'avez rien entré"}
+
     
 
 
