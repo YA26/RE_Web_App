@@ -7,7 +7,7 @@ import operator
 import pickle
 import re
 
-class IncidentClassifier:
+class IncidentClassifier(object):
     
     def __init__(self, Word_2_Vec_path):
         self.__toknizer         = RegexpTokenizer(r'''\w'|\w+|[^\w\s]''')
